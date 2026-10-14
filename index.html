@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Articles Practice – Interactive Grammar</title>
+<style>
+:root{--blue:#1769aa;--dark:#183b63;--green:#18794e;--red:#b42318;--ink:#263648}
+*{box-sizing:border-box}body{margin:0;background:#f2f6fb;color:var(--ink);font:16px/1.55 Arial,Helvetica,sans-serif}
+header{background:linear-gradient(120deg,#183b63,#2586b8);color:white;text-align:center;padding:24px 14px}
+header h1{margin:0 0 6px;font-size:clamp(1.35rem,4vw,2rem)}header p{margin:0}
+main{max-width:950px;margin:18px auto;padding:0 12px 40px}.intro{background:#fff7d6;border-left:5px solid #e2b32d;padding:12px 14px;border-radius:8px}
+.section{background:white;border-radius:14px;padding:18px;margin:16px 0;box-shadow:0 3px 12px #173b6310}.section h2{color:var(--dark);margin:0 0 4px;font-size:1.2rem}.desc{color:#63748a;margin:0 0 14px;font-size:.94rem}
+.passage{background:#f7fbff;border:1px solid #cfe2f2;border-radius:10px;padding:15px 16px;margin:12px 0 18px;line-height:1.8;white-space:normal}.passage h3{margin:0 0 8px;color:var(--dark);font-size:1rem}.passage p{margin:0}.q{border:1px solid #dbe5ef;border-radius:10px;padding:14px;margin:12px 0;scroll-margin-top:12px}.qtext{font-weight:600;margin:0 0 10px}.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.opt{display:flex;gap:8px;align-items:flex-start;text-align:left;border:1px solid #cbd8e5;border-radius:8px;background:white;color:var(--ink);padding:10px;cursor:pointer;font-size:.97rem}.opt:hover{background:#f1f8ff;border-color:#72a9d2}.opt.sel{outline:2px solid var(--blue);background:#edf7ff}.letter{font-weight:bold;color:var(--blue);min-width:21px}
+.feedback{display:none;margin-top:11px;padding:11px;border-radius:8px}.feedback.show{display:block}.feedback.good{background:#e8f7ee;border-left:4px solid var(--green)}.feedback.bad{background:#fff0ef;border-left:4px solid var(--red)}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}button.action{border:0;border-radius:8px;padding:11px 15px;background:var(--blue);color:white;font-weight:bold;cursor:pointer}button.secondary{background:#e7edf4;color:#263648}.score{display:none;margin-top:12px;padding:12px;background:#edf7ff;border-radius:8px;font-weight:bold}.score.show{display:block}
+.rules{background:#f5f9ff;border-radius:9px;padding:13px;margin-top:14px}.rules h3{margin:0 0 6px;color:var(--dark)}.rules ul{margin:6px 0;padding-left:21px}
+@media(max-width:600px){.section{padding:12px}.opts{grid-template-columns:1fr}.q{padding:11px}.opt{padding:11px}}
+</style>
+</head>
+<body>
+<header><h1>Articles: A, An, The or No Article</h1><p>Choose an answer to get instant feedback and a Vietnamese explanation.</p></header>
+<main>
+<div class="intro"><strong>How to practise:</strong> Select an answer for each question. The answer and explanation appear immediately. Each section has its own score.</div>
+<div id="app"></div>
+</main>
+<script>
+const data=[
+{title:"Exercise 1 — Choose the correct answer",desc:"Questions 1–8 · Choose A, B, C or D.",qs:[
+{n:1,q:"My school has a great library with thousands of amazing books, so I go to read in ____ library every day.",a:["a","some","the","Ø"],c:2,e:"Dùng “the” vì “library” đã được xác định là thư viện của trường tôi vừa nhắc đến: “the library”."},
+{n:2,q:"George Washington was ____ first president of ____ United States.",a:["the – the","a – Ø","the – an","the – Ø"],c:0,e:"Dùng “the” trước số thứ tự “first”. Dùng “the” trong tên quốc gia “the United States”."},
+{n:3,q:"New Year's Eve is ____ best time of ____ year to celebrate with family and friends.",a:["a – a","the – the","the – a","a – the"],c:1,e:"Dùng “the” trước so sánh nhất “best” và trong cụm cố định “the year”."},
+{n:4,q:"He left on ____ 6 o'clock train yesterday to see his brother who had ____ accident.",a:["the – the","a – an","the – an","a – the"],c:2,e:"Dùng “the” khi nói đến chuyến tàu cụ thể khởi hành lúc 6 giờ. Dùng “an” trước “accident” vì từ này bắt đầu bằng nguyên âm trong cách phát âm."},
+{n:5,q:"In addition to his full-time job, Peter has ____ weekend job as ____ English tutor.",a:["the – a","the – an","a – a","a – an"],c:3,e:"Dùng “a” trong “a weekend job” vì nhắc đến một công việc chưa xác định. Dùng “an” trước “English” vì âm đầu là nguyên âm /ɪ/."},
+{n:6,q:"Lily wants to travel around ____ world and experience ____ new cultures.",a:["the – Ø","a – Ø","the – the","a – the"],c:0,e:"“The world” là cụm cố định dùng “the”. “Cultures” ở số nhiều mang nghĩa chung nên không cần mạo từ (Ø)."},
+{n:7,q:"Charles Lindbergh was ____ first man to fly over ____ Atlantic non-stop and alone.",a:["a – the","the – the","the – Ø","the – an"],c:1,e:"Dùng “the” trước số thứ tự “first” và trước tên đại dương: “the Atlantic”."},
+{n:8,q:"A ticket on ____ commercial flight to ____ moon would cost $20 million.",a:["Ø – the","a – Ø","the – Ø","a – the"],c:3,e:"Dùng “a” vì “commercial flight” là danh từ đếm được số ít được nhắc lần đầu. Dùng “the” trong cụm “the moon”."}
+]},
+{title:"Exercise 2 — Find the underlined part that needs correction",desc:"Questions 1–8 · Choose the underlined part A, B, C or D that contains an error.",qs:[
+{n:1,q:"His family usually goes to a same restaurant to have dinner on Saturday.",a:["A — His family usually goes","B — a same restaurant","C — to have dinner","D — on Saturday"],c:1,e:"Lỗi ở B. Trước “same” thường dùng “the”: “the same restaurant”, không dùng “a same restaurant”."},
+{n:2,q:"After their trip to the Netherlands, my parents said they enjoyed The Hague, but didn't like the Amsterdam.",a:["A — their trip","B — the Netherlands","C — The Hague","D — the Amsterdam"],c:3,e:"Lỗi ở D. Tên thành phố “Amsterdam” thường không dùng “the”. Sửa thành “Amsterdam”."},
+{n:3,q:"The number of students attending English courses at our university are increasing.",a:["A — The number","B — students","C — at our university","D — are increasing"],c:3,e:"Lỗi ở D. Chủ ngữ là “The number” (số lượng, số ít), nên dùng “is increasing”, không phải “are increasing”."},
+{n:4,q:"My parents wanted me to play a musical instrument, so I learned a violin at the age of 12.",a:["A — a musical instrument","B — so","C — a violin","D — at the age of 12"],c:2,e:"Lỗi ở C. Với nhạc cụ, thường dùng “the”: “learned the violin”."},
+{n:5,q:"A lot of foreign students experience culture shock when studying in an US.",a:["A — foreign students","B — experience culture shock","C — when studying","D — an US"],c:3,e:"Lỗi ở D. Dùng “the US” (Hoa Kỳ), không dùng “an US”. Sửa thành “when studying in the US”."},
+{n:6,q:"Last month, while my friend was travelling around England by the car, he crashed into a tree.",a:["A — Last month","B — while my friend was travelling","C — by the car","D — into a tree"],c:2,e:"Lỗi ở C. Phương tiện nói chung với “by” không dùng mạo từ: “by car”, không phải “by the car”."},
+{n:7,q:"The most important holiday in Japan is the New Year's Day.",a:["A — The most important holiday","B — in Japan","C — the New Year's Day","D — ."],c:2,e:"Lỗi ở C. Tên ngày lễ “New Year's Day” thường không dùng “the”. Sửa thành “New Year's Day”."},
+{n:8,q:"Sa Pa is a beautiful mountain town in a north of the country, near the border of China.",a:["A — a beautiful mountain town","B — a north","C — the country","D — the border of China"],c:1,e:"Lỗi ở B. Dùng “the north of the country” để nói miền bắc của một quốc gia, không dùng “a north”."}
+]},
+{title:"Exercise 3 — Complete the text",desc:"Questions 1–8 · Choose a, an, the or Ø (no article).",qs:[
+{n:1,q:"In order to promote cultural awareness, teachers need to understand all ____ different kinds of diversity at school because every student is unique.",a:["a","an","the","Ø"],c:2,e:"Theo đáp án cung cấp, chọn “the”. Trong cụm “all the different kinds of diversity”, “the” xác định những loại đa dạng cụ thể đang được đề cập."},
+{n:2,q:"____ person's skin colour can have a great impact on their experience in society.",a:["A","An","The","Ø"],c:0,e:"Dùng “a” trước danh từ số ít đếm được “person” khi nói khái quát về một người bất kỳ."},
+{n:3,q:"It can also influence how they view themselves and others when participating in ____ classroom activities.",a:["a","an","the","Ø"],c:3,e:"“Classroom activities” là danh từ số nhiều mang nghĩa chung nên không cần mạo từ."},
+{n:4,q:"Ethnicity refers to ____ social and cultural characteristics of a group of people.",a:["a","an","the","Ø"],c:2,e:"Theo đáp án cung cấp, chọn “the” để chỉ những đặc điểm xã hội và văn hóa được nói đến trong định nghĩa này."},
+{n:5,q:"While some people may have ____ same skin colour, they may come from different places.",a:["a","an","the","Ø"],c:2,e:"Cụm cố định là “the same” (giống nhau), vì vậy cần dùng “the”."},
+{n:6,q:"They may come from different places and have different cultural beliefs and views of ____ world.",a:["a","an","the","Ø"],c:2,e:"Dùng “the” trong cụm quen thuộc “the world” (thế giới)."},
+{n:7,q:"Students may react differently to ____ lessons based on their religion or may not be able to celebrate certain holidays.",a:["a","an","the","Ø"],c:3,e:"“Lessons” là danh từ số nhiều nói chung, nên không cần mạo từ."},
+{n:8,q:"There are many students who learn English as ____ second or foreign language.",a:["a","an","the","Ø"],c:0,e:"Dùng “a” trong cụm “a second or foreign language” vì đây là danh từ đếm được số ít và “second” bắt đầu bằng phụ âm /s/."}
+]}
+,
+{title:"Exercise 4 — Articles: Multiple Choice (Questions 1–30)",desc:"Choose the correct article: a, an, the or Ø (no article). Feedback and Vietnamese explanations appear after each choice.",qs:[
+{n:1,q:"____ youngest kid has just started going to ____ school.",a:["A / Ø","Ø / the","An / Ø","The / Ø"],c:3,e:"Dùng “the” trước so sánh nhất “youngest”. “Go to school” nói về việc đi học với tư cách học sinh nên không cần mạo từ."},
+{n:2,q:"What’s the highest mountain on ____ earth?",a:["Ø","the","a","an"],c:0,e:"Theo đáp án cung cấp, dùng Ø trong cụm “on earth” khi mang nghĩa trên Trái Đất/nói chung."},
+{n:3,q:"They are looking for ____ place to spend ____ night.",a:["the / the","a / the","a / a","the / a"],c:1,e:"“A place” là một nơi chưa xác định. Cụm tự nhiên là “spend the night” (qua đêm), dùng “the”."},
+{n:4,q:"Please turn off ____ lights when you leave ____ room.",a:["the / the","a / a","the / a","a / the"],c:0,e:"Dùng “the” cho đèn và căn phòng cụ thể mà người nói/nghe đều hiểu đang nói đến."},
+{n:5,q:"Do you plan to go to ____ prison to visit him?",a:["the","a","Ø","an"],c:0,e:"Khi nói đến việc đến nhà tù để thăm một người cụ thể, dùng “the prison”. (So sánh: “go to prison” có thể mang nghĩa bị bỏ tù.)"},
+{n:6,q:"We needed ____ house to live in when we were in London.",a:["a","the","any","Ø"],c:0,e:"“House” là danh từ đếm được số ít, được nhắc đến lần đầu và chưa xác định, nên dùng “a”."},
+{n:7,q:"You are ____ only person whose opinion is of any value to me in ____ present regrettable circumstances.",a:["the / Ø","the / the","the / a","Ø / the"],c:1,e:"Dùng “the” trước “only”. “The present circumstances” chỉ hoàn cảnh hiện tại cụ thể."},
+{n:8,q:"The boy told me he hated ____ doctors.",a:["the","some","Ø","a"],c:2,e:"Theo đáp án cung cấp, dùng Ø trước danh từ số nhiều “doctors” khi nói chung."},
+{n:9,q:"Mr. Smith is ____ old customer and ____ honest man.",a:["an / the","the / an","an / an","the / the"],c:2,e:"Dùng “an” trước “old” và “honest” vì cả hai từ đều bắt đầu bằng âm nguyên âm."},
+{n:10,q:"My brother hopes to travel around the world ____ next summer.",a:["a","an","the","Ø"],c:3,e:"Tên mùa/thời gian trong cụm “next summer” không cần mạo từ."},
+{n:11,q:"Can you show me ____ way to ____ supermarket?",a:["the / the","a / a","the / a","a / the"],c:0,e:"Cách nói thông dụng là “show me the way to the supermarket” (chỉ đường đến siêu thị cụ thể)." },
+{n:12,q:"____ university is an institution of higher education and research, which grants academic degrees.",a:["A","An","The","Some"],c:0,e:"Dùng “A” trước “university” vì từ này bắt đầu bằng âm /juː/ (âm phụ âm /j/), dù chữ cái đầu là u."},
+{n:13,q:"In most ____ developed countries, up to 50% of ____ population enters higher education at some time in their lives.",a:["the / Ø","Ø / Ø","the / the","Ø / the"],c:3,e:"“Developed countries” nói chung nên không cần mạo từ. “The population” chỉ dân số của nhóm quốc gia đang được nói đến."},
+{n:14,q:"Reports are coming in of a major oil spill in ____ Mediterranean.",a:["an","Ø","the","a"],c:2,e:"Tên biển/địa danh đại dương như “the Mediterranean” thường dùng “the”."},
+{n:15,q:"____ non-verbal language is ____ important aspect of interpersonal communication.",a:["The / a","Ø / an","A / the","The / Ø"],c:1,e:"“Non-verbal language” được nói chung nên dùng Ø. “Important aspect” là danh từ đếm được số ít, “important” bắt đầu bằng âm nguyên âm nên dùng “an”."},
+{n:16,q:"Is it acceptable to touch ____ person on ____ shoulder in a conversation?",a:["a / the","the / a","the / the","a / a"],c:0,e:"Dùng “a person” để nói về một người bất kỳ. Trong cấu trúc “touch someone on the shoulder”, bộ phận cơ thể dùng “the”."},
+{n:17,q:"The excursion is ____ unique opportunity to discover ____ wild in its natural beauty.",a:["an / Ø","a / the","the / the","an / the"],c:1,e:"Dùng “a” trước “unique” vì âm đầu là /j/ như “you”. “The wild” chỉ thiên nhiên/miền hoang dã nói như một khái niệm."},
+{n:18,q:"____ colleges and universities are the main institutions that provide ____ tertiary education.",a:["Ø / Ø","The / Ø","The / the","Ø / the"],c:0,e:"“Colleges and universities” nói chung và “tertiary education” (giáo dục bậc đại học/cao đẳng) đều không cần mạo từ."},
+{n:19,q:"I have left my book in ____ kitchen and I would like you to get it for me.",a:["the","a","Ø","an"],c:0,e:"Dùng “the kitchen” vì đây là căn bếp cụ thể, thường là bếp trong nhà đang được nhắc đến."},
+{n:20,q:"Of all the world’s major oceans, ____ Arctic Ocean is the shallowest.",a:["an","the","a","Ø"],c:1,e:"Tên đại dương dùng “the”: “the Arctic Ocean”."},
+{n:21,q:"He was ____ unsuccessful musician when he came to this town.",a:["the","Ø","a","an"],c:3,e:"Dùng “an” trước “unsuccessful” vì từ này bắt đầu bằng âm nguyên âm /ʌ/."},
+{n:22,q:"Park Hang-seo, who is the head coach of ____ Vietnam national football team, is a new idol of many people.",a:["Ø","a","the","an"],c:2,e:"Theo đáp án cung cấp, dùng “the” để chỉ đội tuyển bóng đá quốc gia Việt Nam cụ thể."},
+{n:23,q:"Africa has always had a large migratory population because of war and ____ famine.",a:["a","an","the","Ø"],c:3,e:"“War and famine” nói về các hiện tượng nói chung nên không cần mạo từ trước “famine”."},
+{n:24,q:"____ life would be difficult without ____ useful machines and gadgets we have today.",a:["a – the","the – an","a – Ø","Ø – the"],c:3,e:"“Life” mang nghĩa khái quát nên dùng Ø. “The useful machines and gadgets we have today” là những máy móc, thiết bị cụ thể đang có ngày nay."},
+{n:25,q:"The man grew up in ____ orphanage in ____ United Kingdom.",a:["the / an","an / the","an / an","the / Ø"],c:1,e:"Dùng “an” trước “orphanage” vì âm đầu là nguyên âm. Tên quốc gia “the United Kingdom” luôn dùng “the”."},
+{n:26,q:"Have you seen ____ novel? I can’t find it anywhere.",a:["an","some","the","a"],c:2,e:"Dùng “the” vì “novel” là cuốn sách cụ thể mà người nói đang tìm."},
+{n:27,q:"I’ll meet you outside ____ post office. I’ll be there in ____ quarter of ____ hour.",a:["the / a / an","Ø / the / a","Ø / Ø / the","the / Ø / a"],c:0,e:"“The post office” là địa điểm cụ thể; “a quarter” là một phần tư; “an hour” dùng “an” vì h trong “hour” không được phát âm."},
+{n:28,q:"More and more investors are pouring ____ money into food and beverage start-ups.",a:["the","a","an","Ø"],c:3,e:"“Money” là danh từ không đếm được được dùng theo nghĩa chung, nên không cần mạo từ."},
+{n:29,q:"At ____ beginning of his speech he spoke about ____ tourism in general.",a:["A / the","The / a","Ø / a","the / Ø"],c:3,e:"Cụm cố định “at the beginning of”. “Tourism in general” nói về du lịch nói chung nên không cần mạo từ."},
+{n:30,q:"I won’t be home for ____ dinner this evening. I’m meeting some friends after ____ work and we’re going to ____ cinema.",a:["Ø / the / Ø","The / Ø / Ø","Ø / Ø / the","Ø / the / the"],c:2,e:"Các bữa ăn nói chung như “dinner” và “work” thường không cần mạo từ. “Go to the cinema” dùng “the”."}
+]},
+{title:"Exercise 5 — Complete the text: Dr David",desc:"Questions 1–8 · Choose the correct article for each gap.",passage:`Dr. David is (1) ______ obesity expert and professor of nutrition at Harvard University. He wrote (2) ______ book called “Always Hungry”. (3) ______ main message of the book is that what causes obesity is not (4) ______ excess of calories, but (5) ______ excess of (6) ______ sugar and (7) ______ refined or processed carbohydrates. Dr. David believes that (8) ______ low fat, high carbohydrate diet people have been eating for the last four decades is making us unhealthy.`,qs:[
+{n:1,q:"Dr. David is (1) ____ obesity expert and professor of nutrition at Harvard University.",a:["a","an","Ø","the"],c:1,e:"Dùng “an” trước “obesity” vì từ bắt đầu bằng âm nguyên âm."},
+{n:2,q:"He wrote (2) ____ book called “Always Hungry”.",a:["a","an","Ø","the"],c:0,e:"“A book” là một cuốn sách được nhắc đến lần đầu."},
+{n:3,q:"(3) ____ main message of the book is that what causes obesity is not (4) ____ excess of calories, but (5) ____ excess of (6) ____ sugar and (7) ____ refined or processed carbohydrates.",a:["A","An","Ø","The"],c:3,e:"Dùng “The” vì “main message” nói đến thông điệp chính cụ thể của cuốn sách."},
+{n:4,q:"What causes obesity is not (4) ____ excess of calories.",a:["a","an","Ø","the"],c:1,e:"Cụm “an excess of” nghĩa là sự dư thừa; “excess” bắt đầu bằng âm nguyên âm."},
+{n:5,q:"...but (5) ____ excess of (6) ____ sugar...",a:["a","an","Ø","the"],c:1,e:"Dùng “an excess of” (sự dư thừa). Đây là cụm danh từ đếm được với mạo từ “an”."},
+{n:6,q:"...an excess of (6) ____ sugar...",a:["a","an","Ø","the"],c:2,e:"“Sugar” là danh từ không đếm được và đang được nói chung, nên dùng Ø."},
+{n:7,q:"...and (7) ____ refined or processed carbohydrates.",a:["a","an","Ø","the"],c:2,e:"“Refined or processed carbohydrates” được nói chung, nên không cần mạo từ."},
+{n:8,q:"Dr. David believes that (8) ____ low fat, high carbohydrate diet people have been eating for the last four decades is making us unhealthy.",a:["a","an","Ø","the"],c:3,e:"Dùng “the” vì mệnh đề “people have been eating for the last four decades” xác định chế độ ăn cụ thể."}
+]},
+{title:"Exercise 6 — Complete the text: Activity Trackers",desc:"Questions 1–20 · Choose the correct article for each gap.",passage:`Activity trackers are (1) ______ very popular way to keep track of (2) ______ physical activities and (3) ______ calorie consumption. But are they accurate and reliable? A recent study conducted by (4) ______ researchers at Stanford University looked at seven of (5) ______ most popular trackers and focused on two measurements: (6) ______ heart rate and how many calories were burned. (7) ______ 60 volunteers who took part in (8) ______ study included 31 women and 29 men.<br><br>For heart rate, researchers compared (9) ______ trackers to (10) ______ findings from an EKG or electrocardiogram. It turns out most of them were pretty accurate and reliable, with (11) ______ error margin of just five percent in six out of (12) ______ seven trackers analyzed.<br><br>To measure calories burned, researchers compared (13) ______ trackers’ findings to those of (14) ______ instrument that measures oxygen and carbon dioxide in a person’s breath. (15) ______ trackers’ calorie measurements, it turns out, were incredibly inaccurate. (16) ______ degree of inaccuracy ranged from 27 percent for (17) ______ most accurate tracker, to 93 percent for (18) ______ most inaccurate one.<br><br>Researchers concluded that (19) ______ people should not base their food intake on how many calories (20) ______ activity tracker says they’re burning.`,qs:[
+{n:1,q:"Activity trackers are (1) ____ very popular way to keep track of (2) ____ physical activities and (3) ____ calorie consumption.",a:["a","an","Ø","the"],c:0,e:"Dùng “a” trong “a very popular way” vì “way” là danh từ đếm được số ít."},
+{n:2,q:"...keep track of (2) ____ physical activities...",a:["a","an","Ø","the"],c:2,e:"“Physical activities” nói chung ở dạng số nhiều nên dùng Ø."},
+{n:3,q:"...and (3) ____ calorie consumption.",a:["A","An","Ø","The"],c:2,e:"“Calorie consumption” được nói chung; không cần mạo từ."},
+{n:4,q:"The study was conducted by (4) ____ researchers at Stanford University...",a:["a","an","Ø","the"],c:2,e:"“Researchers” là danh từ số nhiều nói chung trong ngữ cảnh giới thiệu nghiên cứu, nên theo đáp án dùng Ø."},
+{n:5,q:"...looked at seven of (5) ____ most popular trackers...",a:["a","an","Ø","the"],c:3,e:"Dùng “the” trước so sánh nhất “most popular”."},
+{n:6,q:"...focused on two measurements: (6) ____ heart rate and how many calories were burned.",a:["a","an","Ø","the"],c:2,e:"“Heart rate” là thuật ngữ được nói chung trong mô tả phép đo, nên theo đáp án dùng Ø."},
+{n:7,q:"(7) ____ 60 volunteers who took part in (8) ____ study included 31 women and 29 men.",a:["A","An","Ø","The"],c:3,e:"Dùng “The” vì 60 tình nguyện viên đã được xác định bằng mệnh đề “who took part in the study”."},
+{n:8,q:"...volunteers who took part in (8) ____ study...",a:["a","an","Ø","the"],c:3,e:"Dùng “the” vì đây là nghiên cứu cụ thể đang được nói đến."},
+{n:9,q:"For heart rate, researchers compared (9) ____ trackers to (10) ____ findings from an EKG or electrocardiogram.",a:["a","an","Ø","the"],c:3,e:"Dùng “the” vì “trackers” là những thiết bị cụ thể đã được nhắc đến trong nghiên cứu."},
+{n:10,q:"...compared trackers to (10) ____ findings from an EKG...",a:["a","an","Ø","the"],c:3,e:"Dùng “the findings” để chỉ những kết quả cụ thể từ điện tâm đồ."},
+{n:11,q:"It turns out most of them were pretty accurate and reliable, with (11) ____ error margin of just five percent...",a:["a","an","Ø","the"],c:1,e:"Dùng “an” trước “error” vì từ này bắt đầu bằng âm nguyên âm."},
+{n:12,q:"...in six out of (12) ____ seven trackers analyzed.",a:["a","an","Ø","the"],c:3,e:"Dùng “the” để chỉ bảy thiết bị theo dõi cụ thể đã được phân tích."},
+{n:13,q:"To measure calories burned, researchers compared (13) ____ trackers’ findings...",a:["a","an","Ø","the"],c:3,e:"Dùng “the” trước “trackers’ findings” vì đó là kết quả của những thiết bị cụ thể trong nghiên cứu."},
+{n:14,q:"...to those of (14) ____ instrument that measures oxygen and carbon dioxide in a person’s breath.",a:["a","an","Ø","the"],c:1,e:"Dùng “an” trước “instrument” vì từ này bắt đầu bằng âm nguyên âm."},
+{n:15,q:"(15) ____ trackers’ calorie measurements, it turns out, were incredibly inaccurate.",a:["a","an","Ø","the"],c:3,e:"Dùng “the” để chỉ các phép đo calo cụ thể của những thiết bị đang được nghiên cứu."},
+{n:16,q:"(16) ____ degree of inaccuracy ranged from 27 percent...",a:["a","an","Ø","the"],c:3,e:"Dùng “the” vì đây là mức độ sai số cụ thể được xác định trong kết quả nghiên cứu."},
+{n:17,q:"...for (17) ____ most accurate tracker...",a:["a","an","Ø","the"],c:3,e:"Dùng “the” trước so sánh nhất “most accurate”."},
+{n:18,q:"...to 93 percent for (18) ____ most inaccurate one.",a:["a","an","Ø","the"],c:3,e:"Dùng “the” trước so sánh nhất “most inaccurate”."},
+{n:19,q:"Researchers concluded that (19) ____ people should not base their food intake on how many calories...",a:["a","an","Ø","the"],c:2,e:"“People” nói chung, nên không cần mạo từ."},
+{n:20,q:"...on how many calories (20) ____ activity tracker says they’re burning.",a:["a","an","Ø","the"],c:1,e:"Dùng “an” trước “activity” vì từ bắt đầu bằng âm nguyên âm."}
+]}
+
+];
+const app=document.getElementById('app');
+data.forEach((s,si)=>{
+ const section=document.createElement('section');section.className='section';
+ section.innerHTML=`<h2>${s.title}</h2><p class="desc">${s.desc}</p>${s.passage?`<div class="passage"><h3>Reading passage</h3><p>${s.passage}</p></div>`:""}<div class="qs"></div><div class="actions"><button class="action review">Review all answers</button><button class="action secondary reset">Reset section</button></div><div class="score" aria-live="polite"></div>`;
+ const wrap=section.querySelector('.qs');
+ s.qs.forEach((q,qi)=>{
+  const card=document.createElement('article');card.className='q';card.dataset.q=qi;
+  card.innerHTML=`<p class="qtext">${q.n}. ${q.q}</p><div class="opts" role="group" aria-label="Question ${q.n}"></div><div class="feedback" aria-live="polite"></div>`;
+  const opts=card.querySelector('.opts');
+  q.a.forEach((a,ai)=>{
+   const b=document.createElement('button');b.type='button';b.className='opt';b.innerHTML=`<span class="letter">${String.fromCharCode(65+ai)}.</span><span>${a}</span>`;
+   b.addEventListener('click',()=>{
+    opts.querySelectorAll('.opt').forEach(x=>{x.classList.remove('sel');x.style.borderColor='';x.style.background='';});
+    b.classList.add('sel');card.dataset.answer=ai;
+    opts.querySelectorAll('.opt').forEach((x,index)=>{if(index===q.c){x.style.borderColor='#18794e';x.style.background='#e8f7ee'}else if(index===ai){x.style.borderColor='#b42318';x.style.background='#fff0ef'}});
+    const fb=card.querySelector('.feedback'),ok=ai===q.c;
+    fb.className='feedback show '+(ok?'good':'bad');
+    fb.innerHTML=(ok?'✅ <strong>Correct!</strong>':'❌ <strong>Incorrect.</strong>')+`<br><strong>Correct answer:</strong> ${String.fromCharCode(65+q.c)}. ${q.a[q.c]}<br><strong>Giải thích:</strong> ${q.e}`;
+    updateScore();
+   });
+   opts.appendChild(b);
+  });
+  wrap.appendChild(card);
+ });
+ function updateScore(){
+  const cards=[...wrap.querySelectorAll('.q')],answered=cards.filter(c=>c.dataset.answer!==undefined);
+  const score=answered.filter(c=>Number(c.dataset.answer)===s.qs[Number(c.dataset.q)].c).length;
+  const box=section.querySelector('.score');box.classList.add('show');box.textContent=`Current score: ${score} / ${answered.length} answered · Total questions: ${s.qs.length}`;
+ }
+ section.querySelector('.review').addEventListener('click',()=>{
+  let score=0,answered=0;
+  s.qs.forEach((q,qi)=>{
+   const card=wrap.children[qi],chosen=card.dataset.answer,fb=card.querySelector('.feedback');
+   if(chosen!==undefined){answered++;if(Number(chosen)===q.c)score++;}
+   card.querySelectorAll('.opt').forEach((b,ai)=>{if(ai===q.c){b.style.borderColor='#18794e';b.style.background='#e8f7ee'}});
+   fb.className='feedback show '+(Number(chosen)===q.c?'good':'bad');
+   fb.innerHTML=(Number(chosen)===q.c?'✅ <strong>Correct!</strong>':'❌ <strong>Incorrect or unanswered.</strong>')+`<br><strong>Correct answer:</strong> ${String.fromCharCode(65+q.c)}. ${q.a[q.c]}<br><strong>Giải thích:</strong> ${q.e}`;
+  });
+  const box=section.querySelector('.score');box.className='score show';box.textContent=`Final score: ${score} / ${s.qs.length} · Answered: ${answered} / ${s.qs.length}`;
+ });
+ section.querySelector('.reset').addEventListener('click',()=>{
+  wrap.querySelectorAll('.q').forEach(card=>{delete card.dataset.answer;card.querySelectorAll('.opt').forEach(b=>{b.classList.remove('sel');b.style.borderColor='';b.style.background=''});const fb=card.querySelector('.feedback');fb.className='feedback';fb.textContent='';});
+  const box=section.querySelector('.score');box.className='score';box.textContent='';
+ });
+ app.appendChild(section);
+});
+</script>
+</body>
+</html>
